@@ -15,10 +15,17 @@ for invite in galaInvitations {
   print(invite)
 }
 
-donorDB.filter = { $0.filter({ $0.lastDonation == 0 })}
-donorDB.generate = { $0.map({ "Hi \($0.firstName)" })}
+class NewDonors: DonorDatabase {
+  override func filter(donors: [Donor]) -> [Donor] {
+    return donors.filter({ $0.lastDonation == 0 })
+  }
 
-let newDonors = donorDB.generate(maxNumber: 2)
-for donor in newDonors {
-  print(donor)
+  override func generate(donors: [Donor]) -> [String] {
+    return donors.map({ "Hi \($0.firstName)" })
+  }
+}
+
+let newDonors = NewDonors()
+for invite in newDonors.generate(maxNumber: 2) {
+  print(invite)
 }
