@@ -24,6 +24,8 @@ struct Donor {
 
 class DonorDatabase {
   private var donors: [Donor]
+  var filter: (([Donor]) -> [Donor])?
+  var generate: (([Donor]) -> [String])?
 
   init() {
     donors = [
@@ -34,14 +36,13 @@ class DonorDatabase {
     ]
   }
 
-  func generateGalaInvitations(maxNumber: Int) -> [String] {
-    var targetDonors: [Donor] = donors.filter({ $0.lastDonation > 0 })
+  func generate(maxNumber: Int) -> [String] {
+    var targetDonors: [Donor] = filter?(donors) ?? donors.filter({ $0.lastDonation > 0 })
     targetDonors.sorted(by: { $0.lastDonation > $1.lastDonation })
     if(targetDonors.count > maxNumber) {
       targetDonors = Array(targetDonors[0..<maxNumber])
     }
-
-    return targetDonors.map({ donor in
+    return generate?(targetDonors) ?? targetDonors.map({ donor in
       return "Dear \(donor.title). \(donor.familyName)"
     })
   }
