@@ -8,5 +8,9 @@
 
 import Foundation
 
-print("Hello, World!")
+let donorDB = DonorDatabase()
 
+let galaInvitations = donorDB.generateGalaInvitations(maxNumber: 2)
+for invite in galaInvitations {
+  print(invite)
+}
